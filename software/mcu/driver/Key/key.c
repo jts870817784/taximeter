@@ -2,6 +2,8 @@
 #include "delay.h"
 
 uint8_t flag=0;
+u8 Trg = 0x00;
+u8 Cont = 0x00;
 
 void key_gpio_config(void)
 {
@@ -137,7 +139,26 @@ void SW4_IRQHandler(void)
 
 
 
+void keyScan()
+{
+	static u8 Rd = {0};
+	static u8 dk[6] = {0};
+	
+	//消抖
+	dk[KEY_START]  = (dk[KEY_START]<<1) |(PIN_KEY_START?0:1);
+	dk[KEY_STOP]   = (dk[KEY_STOP]<<1)  |(PIN_KEY_STOP ?0:1);
+	dk[KEY_PRE]    = (dk[KEY_PRE]<<1)   |(PIN_KEY_PRE  ?0:1);
+	dk[KEY_NEXT]   = (dk[KEY_NEXT]<<1)  |(PIN_KEY_NEXT ?0:1);
 
-
-
+	//数据整合
+	Rd = (Rd<<1)|(dk[KEY_START]==0xff?0:1);
+	Rd = (Rd<<1)|(dk[KEY_STOP] ==0xff?0:1);
+	Rd = (Rd<<1)|(dk[KEY_PRE]  ==0xff?0:1);
+	Rd = (Rd<<1)|(dk[KEY_NEXT] ==0xff?0:1);
+	
+	//运算
+	Trg = Rd & (Rd ^ Cont);
+	Cont = Rd;
+	
+}
 

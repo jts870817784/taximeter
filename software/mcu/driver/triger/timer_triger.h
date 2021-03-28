@@ -6,19 +6,19 @@
 
 typedef enum 
 {
-	STOP,
+	STOP = 0,
 	TRIGER_UP,
 	TRIGER_DOWN
 }TrigerMode;
 
-#define TRIGER_MAXNUM 5
+#define TRIGER_MAXNUM 10
 #define TRIGER_ERRO 0XFFFF
 #define TRIGER_NO   0XFFFE
 #define TRIGER_MAX  0XFFFD
 #define TRIGER_YES  0X0000
 
-extern void timer_triger_init(u8 ms);
-extern u8 CreateTriger(TrigerMode mode,u16 val);
-extern u16 IsTriger(u8 id,u16 val);
+extern void initTimerTriger(u8 ms);
+extern u8 registerTriger(TrigerMode mode, u16 val);
+extern u16 isTriger(u8 id);
 
 #endif

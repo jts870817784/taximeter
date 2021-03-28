@@ -16,6 +16,7 @@
 
 u16 triger_buf[TRIGER_MAXNUM] = {0};   //触发器缓冲区
 TrigerMode triger_mode[TRIGER_MAXNUM]; //触发器模式选择
+u16 triger_val[TRIGER_MAXNUM];         //触发器注册时的值
 u8 triger_number = 0;                  //触发器数量
 
 void NVIC_init()
@@ -28,7 +29,7 @@ void NVIC_init()
 	NVIC_Init(&NVIC_InitStructure);
 }
 
-void timer_triger_init(u8 ms)//最短触发时间单位毫秒
+void initTimerTriger(u8 ms)//最短触发时间单位毫秒
 {                            //ms最大为6553ms
 	u8 i;
 	TIM_TimeBaseInitTypeDef TIM_InitStructure;
@@ -58,7 +59,7 @@ void timer_triger_init(u8 ms)//最短触发时间单位毫秒
 返回类型:
 	若成功则返回触发器ID号，否则返回0xff
 */
-u8 CreateTriger(TrigerMode mode,u16 val)
+u8 registerTriger(TrigerMode mode,u16 val)
 {
 	if(triger_number >= TRIGER_MAXNUM)
 	{
@@ -66,6 +67,7 @@ u8 CreateTriger(TrigerMode mode,u16 val)
 	}
 	else
 	{
+        triger_val[triger_number] = val;
 		triger_buf[triger_number] = val;
 		triger_mode[triger_number] = mode;
 		if(mode == TRIGER_UP)
@@ -80,18 +82,17 @@ u8 CreateTriger(TrigerMode mode,u16 val)
 函数名: IsTriger
 参数列表:
 	id:触发器ID号
-	val:设定的触发值
 函数作用：查询是否延时触发
 函数返回：若不存在ID号，则返回TRIGER_ERRO
           若未触发，则返回TRIGER_NO
 		  若在上升模式触发，则返回超出触发时间值，并将缓冲区清0
           若在下降模式触发，则返回TRIGER_YES，并将缓冲区置为val
 */
-u16 IsTriger(u8 id,u16 val)
+u16 isTriger(u8 id)
 {
+    u16 val = triger_val[id];
+    
 	if(id>TRIGER_MAXNUM)
-		
-	
 		return TRIGER_ERRO;
 	if(triger_mode[id] == STOP)
 		return TRIGER_ERRO;
