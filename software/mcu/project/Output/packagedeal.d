@@ -1,0 +1,35 @@
+..\output\packagedeal.o: ..\Source\PackageDeal.c
+..\output\packagedeal.o: ..\Source\PackageDeal.h
+..\output\packagedeal.o: ..\Source\config.h
+..\output\packagedeal.o: ..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\packagedeal.o: ..\Library\CMSIS\CM3\CoreSupport\core_cm3.h
+..\output\packagedeal.o: I:\soft\Keil MDK\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\packagedeal.o: ..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h
+..\output\packagedeal.o: ..\Source\stm32f10x_conf.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
+..\output\packagedeal.o: ..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_bkp.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_can.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_cec.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_crc.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dac.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dbgmcu.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_flash.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_fsmc.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_i2c.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_iwdg.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_pwr.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rtc.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_sdio.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_spi.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
+..\output\packagedeal.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\misc.h
+..\output\packagedeal.o: ..\Source\hc12.h
+..\output\packagedeal.o: ..\Source\PackageDeal.h
+..\output\packagedeal.o: I:\soft\Keil MDK\ARM\ARMCC\Bin\..\include\stdio.h
