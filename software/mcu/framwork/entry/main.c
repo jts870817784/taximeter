@@ -8,13 +8,13 @@
 #include "myiic.h"
 #include "24cxx.h" 
 #include "DS1307.h"
-#include "lcd12864.H"
+#include "lcd12864.h"
 #include "24cxx.h"
 #include "bsp_TiMbase.h" 
 
 extern volatile uint16_t time;
 
-void fram();
+extern void fram(void);
 
 int main(void)
 {	

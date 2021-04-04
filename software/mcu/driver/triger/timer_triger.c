@@ -12,7 +12,7 @@
 
 
 #include "timer_triger.h"
-
+#include "stm32f10x.h"
 
 u16 triger_buf[TRIGER_MAXNUM] = {0};   //触发器缓冲区
 TrigerMode triger_mode[TRIGER_MAXNUM]; //触发器模式选择
@@ -22,7 +22,7 @@ u8 triger_number = 0;                  //触发器数量
 void NVIC_init()
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = 54;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;

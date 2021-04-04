@@ -96,7 +96,7 @@ void MPU6050_Init(void)
   * @param   
   * @retval  
   */
-uint8_t MPU6050ReadID(void)
+uint8_t MPU6050ReadID()
 {
 	unsigned char Re = 0;
     MPU6050_ReadData(MPU6050_RA_WHO_AM_I,&Re,1);    //¶ÁÆ÷¼þµØÖ·

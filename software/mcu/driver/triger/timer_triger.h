@@ -2,7 +2,7 @@
 #define _TIMER_TRIGER_H_
 
 
-#include <stm32f10x.h>
+#include "stm32f10x.h"
 
 typedef enum 
 {

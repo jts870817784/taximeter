@@ -3,6 +3,8 @@
 #include "DS1307.h"
 #include "key.h"
 #include "math.h"
+#include "mpu6050.h"
+#include "lcd12864.h"
 
 /* 触发任务间隔，单位ms */
 #define UPDATA_MPU_TIME        6
@@ -82,16 +84,20 @@ u8 g_pageNum = 0;
 float averAccel;
 float ax, ay, az;
 
+u16 getTimeSub(_calendar_obj *s, _calendar_obj *e)
+{
+    return (e->hour - s->hour) * 60 + (e->min - s->min);
+}
+
 extern double sqrt(double x);
 
 void updataMpu()
 {
     static u8 time = 0;
     short Accel[3];
-	short Gyro[3];
 
     time++;    
-	if (MPU6050ReadID() == 1)
+	if (MPU6050ReadID())
 	{	
 		MPU6050ReadAcc(Accel);
         ax = Accel[0] * ACCEL_RATIO;
@@ -109,12 +115,12 @@ void updataMpu()
 
 void updataLcd()
 {
-    LCD_Display_Words(TEXT_ORDER_POS_X, TEXT_ORDER_POS_Y, g_strOrder);
-    LCD_Display_Words(TEXT_MONEY_POS_X, TEXT_MONEY_POS_Y, g_strMoney);
-    LCD_Display_Words(TEXT_MILE_POS_X, TEXT_MILE_POS_Y, g_strMile);
-    LCD_Display_Words(TEXT_TIME_POS_X, TEXT_TIME_POS_Y, g_strTime);
-    LCD_Display_Words(TEXT_START_POS_X, TEXT_START_POS_Y, g_strStart);
-    LCD_Display_Words(TEXT_END_POS_X, TEXT_END_POS_Y, g_strEnd);    
+    LCD_Display_Words(TEXT_ORDER_POS_X, TEXT_ORDER_POS_Y, (uint8_t *)g_strOrder);
+    LCD_Display_Words(TEXT_MONEY_POS_X, TEXT_MONEY_POS_Y, (uint8_t *)g_strMoney);
+    LCD_Display_Words(TEXT_MILE_POS_X, TEXT_MILE_POS_Y, (uint8_t *)g_strMile);
+    LCD_Display_Words(TEXT_TIME_POS_X, TEXT_TIME_POS_Y, (uint8_t *)g_strTime);
+    LCD_Display_Words(TEXT_START_POS_X, TEXT_START_POS_Y, (uint8_t *)g_strStart);
+    LCD_Display_Words(TEXT_END_POS_X, TEXT_END_POS_Y, (uint8_t *)g_strEnd);    
 }
 
 void updataRtc()
@@ -157,8 +163,6 @@ void updataTask()
         updataKey();
     }
 }
-
-extern int sprintf(char *string, char *format [,argument,...]);
 
 void dispRunning()
 {
@@ -205,10 +209,6 @@ u16 calDif(u8 *buf, u8 len)
     return sum;
 }
 
-u16 getTimeSub(_calendar_obj *s, _calendar_obj e)
-{
-    return (e->hour - s->hour) * 60 + (e->min - s->min);
-}
 
 void fillOrderPacket(orderPacket *odr)
 {
@@ -246,7 +246,7 @@ void menuTask()
             /* stop a order */
             g_runStatus = IDLES;
             DS1307_ReadRtc((u8*)&calendar);
-            fillOrderPacket(g_orderData[g_pageNow++]);
+            fillOrderPacket(g_orderData + g_pageNow++);
             g_pageNum++;
             dispIdle();
         } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {

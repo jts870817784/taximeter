@@ -31,7 +31,7 @@ typedef enum
 #define IS_KEY_TRG(KEY) (Trg&(0x01<<(KEY)))
 
 void EXTI_Key_Config(void);
-void keyScan();
+void keyScan(void);
 
 #endif
 
