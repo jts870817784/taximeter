@@ -23,7 +23,6 @@ typedef enum
 {
 	KEY_START=0,
 	KEY_STOP,
-	KEY_LEFT,
 	KEY_PRE,
 	KEY_NEXT
 }keyval; //¼üÖµÓ³Éä

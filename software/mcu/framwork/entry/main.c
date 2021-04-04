@@ -14,6 +14,8 @@
 
 extern volatile uint16_t time;
 
+void fram();
+
 int main(void)
 {	
 	delay_init();
@@ -27,13 +29,13 @@ int main(void)
 	lcd_GPIO_init();
 	Lcd_Init();
 	BASIC_TIM_Init();   //基本定时器Time2
-	
+
+    fram();
   	//Usart2测试OK
 //	printf("\r\n 欢迎使用野火  STM32 开发板。\r\n");		 
 //	printf("\r\n 这是一个MPU6050测试例程 \r\n");
 
-	
-	
+/*
   	//MPU6050测试OK
 	short Accel[3];
 	short Gyro[3];
@@ -47,8 +49,7 @@ int main(void)
 		MPU6050_ReturnTemp(&Temp); 
 		printf("温度： %8.2f",Temp);
 	}
-	
-	
+*/
 	
 	  //Tiny_RTC测试OK
 //	while(1)
