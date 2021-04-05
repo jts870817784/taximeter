@@ -60,14 +60,14 @@ void BASIC_TIM_Init(void)
 	BASIC_TIM_Mode_Config();
 }
 
-void  BASIC_TIM_IRQHandler (void)
-{
-	if ( TIM_GetITStatus( BASIC_TIM, TIM_IT_Update) != RESET ) 
-	{	
-		time++;
-		TIM_ClearITPendingBit(BASIC_TIM , TIM_FLAG_Update);  		 
-	}		 	
-}
+//void  BASIC_TIM_IRQHandler (void)
+//{
+//	if ( TIM_GetITStatus( BASIC_TIM, TIM_IT_Update) != RESET ) 
+//	{	
+//		time++;
+//		TIM_ClearITPendingBit(BASIC_TIM , TIM_FLAG_Update);  		 
+//	}		 	
+//}
 
 
 /*********************************************END OF FILE**********************/

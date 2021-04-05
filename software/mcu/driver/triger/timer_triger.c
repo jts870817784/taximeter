@@ -13,6 +13,7 @@
 
 #include "timer_triger.h"
 #include "stm32f10x.h"
+#include "bsp_TiMbase.h"
 
 u16 triger_buf[TRIGER_MAXNUM] = {0};   //触发器缓冲区
 TrigerMode triger_mode[TRIGER_MAXNUM]; //触发器模式选择
@@ -116,13 +117,13 @@ u16 isTriger(u8 id)
 //#define T1 PCout(6)
 //#define T2 PCout(7)
 
-void TIM6_IRQHandler(void)
+void BASIC_TIM_IRQHandler(void)
 {
 //	static u8 flag = 0;
 	u8 i;
-	if(TIM_GetITStatus(TIM6,TIM_IT_Update) == SET)
+	if(TIM_GetITStatus(BASIC_TIM,TIM_IT_Update) == SET)
 	{
-		TIM_ClearITPendingBit(TIM6,TIM_IT_Update);
+		TIM_ClearITPendingBit(BASIC_TIM,TIM_IT_Update);
 		for(i=0;i<triger_number;i++)
 		{
 			if(triger_mode[i]==TRIGER_DOWN)

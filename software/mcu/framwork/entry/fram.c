@@ -18,9 +18,9 @@
 
 #define MAX_ORDER_NUM 128
 
-#define ORDER_BASE_PRICE 800    /* 8块钱起步价 */
-#define ORDER_TIME_PRICE 30     /* 0.3￥/分钟 */
-#define ORDER_MILE_PRICE 300    /* 3￥/km */
+#define ORDER_BASE_PRICE 800    /* 8块钱起步�?*/
+#define ORDER_TIME_PRICE 30     /* 0.3�?分钟 */
+#define ORDER_MILE_PRICE 300    /* 3�?km */
 
 #define ACCEL_G 9.8
 #define ACCEL_RATIO (4.0 / 4096)
@@ -68,7 +68,10 @@ runStatus g_runStatus = IDLES;
 _calendar_obj g_timePoint;
 _calendar_obj g_date;
 
-orderPacket g_orderData[MAX_ORDER_NUM];
+orderPacket g_orderData[MAX_ORDER_NUM] = {
+    { 0 },
+    {HEADER_CODE, 0x2E, 10001, {0}, {0}, 120, 40, 0x8e, END_CODE}
+};
 
 char g_strOrder[16];
 char g_strMoney[16];
@@ -79,7 +82,14 @@ char g_strEnd[64];
 
 long g_mile = 0;
 s8 g_pageNow = 0;
-u8 g_pageNum = 0;
+u8 g_pageNum = 1;
+
+u8 updataTaskId;
+u8 menuTaskId;
+u8 updataMpuId;
+u8 updataLcdId;
+u8 updataBtId;
+u8 updataKeyId;
 
 float averAccel;
 float ax, ay, az;
@@ -107,7 +117,7 @@ void updataMpu()
         az = az - ACCEL_G;
         averAccel =  sqrt(ax*ax + ay*ay + az*az);
 
-        g_mile = g_mile + time * UPDATA_MPU_TIME * averAccel; /* 路程等于三维加速度向量的模的积分 */
+        g_mile = g_mile + time * UPDATA_MPU_TIME * averAccel; /* 路程等于三维加速度向量的模的积�?*/
         
         time = 1;
 	}
@@ -139,17 +149,6 @@ void updataKey()
 }
 void updataTask()
 {
-
-    u8 updataMpuId;
-    u8 updataLcdId;
-    u8 updataBtId;
-    u8 updataKeyId;
-
-    updataMpuId = registerTriger(TRIGER_DOWN, UPDATA_MPU_TIME);
-    updataLcdId = registerTriger(TRIGER_DOWN, UPDATA_LCD_TIME);
-    updataBtId  = registerTriger(TRIGER_DOWN, UPDATA_BLUE_TOOTH_TIME);
-    updataKeyId = registerTriger(TRIGER_DOWN, UPDATA_KEY_TTIME);
-
     if (isTriger(updataMpuId) == TRIGER_YES) {
         updataMpu();
     }
@@ -259,11 +258,13 @@ void menuTask()
 
 void fram() 
 {
-    u8 updataTaskId = 0;
-    u8 menuTaskId = 0;
 
     updataTaskId = registerTriger(TRIGER_DOWN, UPDATA_TASK_TIME);
     menuTaskId = registerTriger(TRIGER_DOWN, MENU_TASK_TIME);
+	updataMpuId = registerTriger(TRIGER_DOWN, UPDATA_MPU_TIME);
+    updataLcdId = registerTriger(TRIGER_DOWN, UPDATA_LCD_TIME);
+    updataBtId  = registerTriger(TRIGER_DOWN, UPDATA_BLUE_TOOTH_TIME);
+    updataKeyId = registerTriger(TRIGER_DOWN, UPDATA_KEY_TTIME);
     while (1) {
 
         if (isTriger(updataTaskId) == TRIGER_YES) {
