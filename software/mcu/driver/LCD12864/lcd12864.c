@@ -122,7 +122,7 @@ delay_ms(30);	//延时>10ms
  *  @param 	str: 要显示的字符或汉字
  *  @author     Z小旋
  */
-void LCD_Display_Words(uint8_t x,uint8_t y,uint8_t*str)
+void LCD_Display_Words(uint8_t y,uint8_t x,uint8_t*str)
 { 
 	Lcd_WriteCmd(LCD_addr[x][y]); //写初始光标位置
 	while(*str>0)

@@ -162,3 +162,34 @@ void keyScan()
 	
 }
 
+int IS_KEY_TRG(keyval k)
+{
+    int res = 0;
+    switch (k) {
+        case KEY_START:
+            if (PIN_KEY_START == 0) {
+                res = 1;
+            }
+            break;
+        case KEY_STOP:
+            if (PIN_KEY_STOP == 0) {
+                res = 1;
+            }
+            break;
+        case KEY_PRE:
+            if (PIN_KEY_PRE == 0) {
+                res = 1;
+            }
+            break;
+        case KEY_NEXT:
+            if (PIN_KEY_NEXT == 0) {
+                res = 1;
+            }
+            break;
+        default:
+            break;
+    }
+    return res;
+}
+
+

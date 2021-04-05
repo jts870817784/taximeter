@@ -11,6 +11,7 @@
 #define UPDATA_LCD_TIME        20
 #define UPDATA_BLUE_TOOTH_TIME 2
 #define UPDATA_KEY_TTIME       10
+#define UPDATA_RTC_TIME        500
 
 #define UPDATA_TASK_TIME       2
 #define MENU_TASK_TIME         2
@@ -29,11 +30,11 @@
 #define HEADER_CODE 0X55AA
 #define END_CODE    0XAA55
 
-#define TEXT_GRID 12
+#define TEXT_GRID 1
 
-#define TEXT_ORDER_POS_X  5
-#define TEXT_ORDER_POS_Y  5
-#define TEXT_MONEY_POS_X  82
+#define TEXT_ORDER_POS_X  0
+#define TEXT_ORDER_POS_Y  0
+#define TEXT_MONEY_POS_X  4
 #define TEXT_MONEY_POS_Y  TEXT_ORDER_POS_Y
 #define TEXT_MILE_POS_X   TEXT_ORDER_POS_X
 #define TEXT_MILE_POS_Y   (TEXT_ORDER_POS_Y + TEXT_GRID)
@@ -45,7 +46,7 @@
 #define TEXT_END_POS_Y    (TEXT_START_POS_Y + TEXT_GRID)
 
 
-#define GET_MONEY(time, mile) (((time) * ORDER_TIME_PRICE) + ((mile) * ORDER_MILE_PRICE) + ORDER_BASE_PRICE)
+#define GET_MONEY(time, mile) ((((time) * ORDER_TIME_PRICE) + ((mile) / 1000 * ORDER_MILE_PRICE) + ORDER_BASE_PRICE) / 100.0)
 
 typedef enum tagRunStatus {
     RUNNING = 0,
@@ -68,10 +69,7 @@ runStatus g_runStatus = IDLES;
 _calendar_obj g_timePoint;
 _calendar_obj g_date;
 
-orderPacket g_orderData[MAX_ORDER_NUM] = {
-    { 0 },
-    {HEADER_CODE, 0x2E, 10001, {0}, {0}, 120, 40, 0x8e, END_CODE}
-};
+orderPacket g_orderData[MAX_ORDER_NUM];
 
 char g_strOrder[16];
 char g_strMoney[16];
@@ -90,6 +88,7 @@ u8 updataMpuId;
 u8 updataLcdId;
 u8 updataBtId;
 u8 updataKeyId;
+u8 updataRtcId;
 
 float averAccel;
 float ax, ay, az;
@@ -117,9 +116,9 @@ void updataMpu()
         az = az - ACCEL_G;
         averAccel =  sqrt(ax*ax + ay*ay + az*az);
 
-        g_mile = g_mile + time * UPDATA_MPU_TIME * averAccel; /* 路程等于三维加速度向量的模的积�?*/
+        g_mile = g_mile + time * UPDATA_MPU_TIME * UPDATA_MPU_TIME * averAccel / 2; /* 路程等于三维加速度向量的模的积�?*/
         
-        time = 1;
+        time = 0;
 	}
 }
 
@@ -161,6 +160,9 @@ void updataTask()
     if (isTriger(updataKeyId) == TRIGER_YES) {
         updataKey();
     }
+    if (isTriger(updataRtcId) == TRIGER_YES) {
+        updataRtc();
+    }
 }
 
 void dispRunning()
@@ -171,13 +173,13 @@ void dispRunning()
 
     timeDif = getTimeSub(&g_timePoint, &g_date);
     money = GET_MONEY(timeDif, g_mile);
-    sprintf(g_strOrder, "  odr:%05d", g_pageNum + 1);
-    sprintf(g_strMoney, " mny:%3.1f$", money);
-    sprintf(g_strMile, " mile:%4.1fkm", g_mile);
-    sprintf(g_strTime, "time:%2dmin", timeDif);
-    sprintf(g_strStart, "start:%4d-%2d-%2d  %2d:%2d:%2d", g_timePoint.w_year, g_timePoint.w_month,
+    sprintf(g_strOrder, "#:%05d", g_pageNum + 1);
+    sprintf(g_strMoney, " %3.1f$", money);
+    sprintf(g_strMile, "M:%4.1fkm", g_mile);
+    sprintf(g_strTime, " T:%2dmin", timeDif);
+    sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d", g_timePoint.w_month,
         g_timePoint.w_date, g_timePoint.hour, g_timePoint.min, g_timePoint.sec);
-    sprintf(g_strStart, "  now:%4d-%2d-%2d  %2d:%2d:%2d",g_date.w_year, g_date.w_month,
+    sprintf(g_strEnd, "n:%02d-%02d %02d:%02d:%02d", g_date.w_month,
         g_date.w_date, g_date.hour, g_date.min, g_date.sec);
 }
 
@@ -186,14 +188,14 @@ void dispIdle()
     /* idle status display */
     u16 timeDif = getTimeSub(&g_orderData[g_pageNow].startTime, &g_orderData[g_pageNow].endTime);
 
-    sprintf(g_strOrder, "  odr:%05d", g_pageNow);
-    sprintf(g_strMoney, " mny:%3.1f$", g_orderData[g_pageNow].money);
-    sprintf(g_strMile, " mile:%4.1fkm", g_orderData[g_pageNow].mile);
-    sprintf(g_strTime, "time:%2dmin", timeDif);
-    sprintf(g_strStart, "start:%4d-%2d-%2d  %2d:%2d:%2d", g_orderData[g_pageNow].startTime.w_year,
+    sprintf(g_strOrder, "#:%05d", g_pageNow);
+    sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money);
+    sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile);
+    sprintf(g_strTime, " T:%2dmin", timeDif);
+    sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d",
         g_orderData[g_pageNow].startTime.w_month, g_orderData[g_pageNow].startTime.w_date, g_orderData[g_pageNow].startTime.hour,
         g_orderData[g_pageNow].startTime.min, g_orderData[g_pageNow].startTime.sec);
-    sprintf(g_strStart, "start:%4d-%2d-%2d  %2d:%2d:%2d", g_orderData[g_pageNow].endTime.w_year,
+    sprintf(g_strEnd, "e:%02d-%02d %02d:%02d:%02d",
         g_orderData[g_pageNow].endTime.w_month, g_orderData[g_pageNow].endTime.w_date, g_orderData[g_pageNow].endTime.hour,
         g_orderData[g_pageNow].endTime.min, g_orderData[g_pageNow].endTime.sec);
 }
@@ -239,17 +241,21 @@ void menuTask()
         } else if (IS_KEY_TRG(KEY_NEXT)) {
             g_pageNow++;
             dispIdle();
+        } else {
+            dispIdle();
         }
     } else if (g_runStatus == RUNNING) {
         if (IS_KEY_TRG(KEY_STOP)) {
             /* stop a order */
             g_runStatus = IDLES;
             DS1307_ReadRtc((u8*)&calendar);
-            fillOrderPacket(g_orderData + g_pageNow++);
-            g_pageNum++;
+            fillOrderPacket(g_orderData + g_pageNum++);
+            g_pageNow = g_pageNum - 1;
             dispIdle();
         } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
             dispIdle();
+        } else {
+            dispRunning();
         }
     } else {
         /* never run to here! */;
@@ -258,13 +264,14 @@ void menuTask()
 
 void fram() 
 {
-
+    fillOrderPacket(g_orderData + g_pageNum++);
     updataTaskId = registerTriger(TRIGER_DOWN, UPDATA_TASK_TIME);
     menuTaskId = registerTriger(TRIGER_DOWN, MENU_TASK_TIME);
 	updataMpuId = registerTriger(TRIGER_DOWN, UPDATA_MPU_TIME);
     updataLcdId = registerTriger(TRIGER_DOWN, UPDATA_LCD_TIME);
     updataBtId  = registerTriger(TRIGER_DOWN, UPDATA_BLUE_TOOTH_TIME);
     updataKeyId = registerTriger(TRIGER_DOWN, UPDATA_KEY_TTIME);
+    updataRtcId = registerTriger(TRIGER_DOWN, UPDATA_RTC_TIME);
     while (1) {
 
         if (isTriger(updataTaskId) == TRIGER_YES) {

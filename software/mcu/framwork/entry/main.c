@@ -29,8 +29,6 @@ int main(void)
 	lcd_GPIO_init();
 	Lcd_Init();
 	BASIC_TIM_Init();   //基本定时器Time2
-
-	LCD_Display_Words(0,0,"hello word");
     fram();
   	//Usart2测试OK
 //	printf("\r\n 欢迎使用野火  STM32 开发板。\r\n");		 
