@@ -66,9 +66,10 @@
 #define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //PGx ‰»Î
 /********************************************************************************/
 
+/*
 void delay_us(uint16_t us);
 void delay_ms(uint16_t nms);
-
+*/
 
 
 
