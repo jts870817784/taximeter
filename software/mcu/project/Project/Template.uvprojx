@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\arm;..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\Library\CMSIS\CM3\CoreSupport;..\Library\STM32F10x_StdPeriph_Driver\inc;..\..\driver\Bluetooth;..\..\driver\delay;..\..\driver\EEPROM;..\..\driver\Key;..\..\driver\LCD12864;..\..\driver\LED;..\..\driver\MPU6050;..\..\driver\Realtime;..\..\driver\sys;..\..\driver\Timer;..\Source</IncludePath>
+              <IncludePath>..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\arm;..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\Library\CMSIS\CM3\CoreSupport;..\Library\STM32F10x_StdPeriph_Driver\inc;..\..\driver\Bluetooth;..\..\driver\delay;..\..\driver\EEPROM;..\..\driver\Key;..\..\driver\LCD12864;..\..\driver\LED;..\..\driver\MPU6050;..\..\driver\Realtime;..\..\driver\sys;..\..\driver\Timer;..\Source;..\..\driver\triger;..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -384,6 +384,11 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\framwork\entry\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>fram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\framwork\entry\fram.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -659,6 +664,16 @@
               <FileName>stm32f10x_it.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Source\stm32f10x_it.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Triger</GroupName>
+          <Files>
+            <File>
+              <FileName>timer_triger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\triger\timer_triger.c</FilePath>
             </File>
           </Files>
         </Group>
