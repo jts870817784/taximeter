@@ -244,40 +244,48 @@ void updataOdrpktToLoc(u8 index)
     flashRead(index, g_orderData + index);
 }
 
+void idleTask() {
+    if (IS_KEY_TRG(KEY_START)) {
+        /* start a order */
+        g_runStatus = RUNNING;
+        g_mile = 0;
+        DS1307_ReadRtc((u8*)&g_timePoint); /* record time now. */
+        dispRunning();
+    } else if (IS_KEY_TRG(KEY_PRE)) {
+        g_pageNow--;
+        dispIdle();
+    } else if (IS_KEY_TRG(KEY_NEXT)) {
+        g_pageNow++;
+        dispIdle();
+    ｝else if (IS_KEY_TRG(KEY_STOP)) {
+        delOrderPacket();
+    } else {
+        dispIdle();
+    }
+}
+
+void runingTask()
+{
+    if (IS_KEY_TRG(KEY_STOP)) {
+        /* stop a order */
+        g_runStatus = IDLES;
+        DS1307_ReadRtc((u8*)&calendar);
+        fillOrderPacket(g_orderData + g_pageNum);
+        updataOdrpktToFlash(g_pageNum);
+        g_pageNum++;
+        dispIdle();
+    } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
+        dispIdle();
+    } else {
+        dispRunning();
+    }
+}
 void menuTask()
 {
     if (g_runStatus == IDLES) {
-        if (IS_KEY_TRG(KEY_START)) {
-            /* start a order */
-            g_runStatus = RUNNING;
-            g_mile = 0;
-            DS1307_ReadRtc((u8*)&g_timePoint); /* record time now. */
-            dispRunning();
-        } else if (IS_KEY_TRG(KEY_PRE)) {
-            g_pageNow--;
-            dispIdle();
-        } else if (IS_KEY_TRG(KEY_NEXT)) {
-            g_pageNow++;
-            dispIdle();
-        ｝else if (IS_KEY_TRG(KEY_STOP)) {
-            delOrderPacket();
-        } else {
-            dispIdle();
-        }
+        idleTask();
     } else if (g_runStatus == RUNNING) {
-        if (IS_KEY_TRG(KEY_STOP)) {
-            /* stop a order */
-            g_runStatus = IDLES;
-            DS1307_ReadRtc((u8*)&calendar);
-            fillOrderPacket(g_orderData + g_pageNum);
-            updataOdrpktToFlash(g_pageNum);
-            g_pageNum++;
-            dispIdle();
-        } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
-            dispIdle();
-        } else {
-            dispRunning();
-        }
+        runingTask();
     } else {
         /* never run to here! */;
     }
