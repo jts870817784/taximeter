@@ -1,150 +1,111 @@
-#include "24cxx.h" 
-#include "DS1307.h"
-#include "delay.h"
+/*
+
+                        FLASH内存映射
+
+基准地址：(FLASH_BASE_ADDRESS) 0x800FC00
+标志变量：默认值
+--------------------------------------------------------------------------------------------------
+|  偏移地址  | 00 | 01 |  02  |  03  | 04 | 05 | 06 | 07 | 08 | 09 | 0A | 0B | 0C | 0D | 0E | 0F | 
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|   变量名   |  标志   |  in_max_out |        in_kp      |       in_kd       |       in_ki       |
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|  偏移地址  |  10  |  11  | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 1A | 1B | 1C | 1D | 1E | 1F | 
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|   变量名   | out_max_out |z_max_out|       out_kp      |      out_kd       |      out_ki       |
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|  偏移地址  | 20 | 21 |  22  |  23  | 24 | 25 | 26 | 27 | 28 | 29 | 2A | 2B | 2C | 2D | 2E | 2F | 
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|   变量名   |in_max_ki|  out_max_ki |       z_kd        |       z_ki        |        z_kp       |
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|  偏移地址  | 30 | 31 |  32  |  33  | 34 | 35 | 36 | 37 | 38 | 39 | 3A | 3B | 3C | 3D | 3E | 3F | 
+|------------+-----------------------+-------------------+-------------------+-------------------|
+|   变量名   | z_max_ki|   reserve   |     in_apart      |     out_apart     |      z_apart      |
+--------------------------------------------------------------------------------------------------
+
+*/
+
+#include "flash.h"
+#include "stdio.h"
 
 
-//在AT24CXX指定地址读出一个数据
-//ReadAddr:开始读数的地址  
-//返回值  :读到的数据
-u8 AT24CXX_ReadOneByte(u16 ReadAddr)
-{				  
-	u8 temp=0;		  	    																 
-  IIC_Start();  
-	if(EE_TYPE>AT24C16)
-	{
-		IIC_Send_Byte(0XA0);	   //发送写命令
-		IIC_Wait_Ack();
-		IIC_Send_Byte(ReadAddr>>8);//发送高地址
-		IIC_Wait_Ack();		 
-	}
-  else 
-  {
-    IIC_Send_Byte(0XA0+((ReadAddr/256)<<1));   //发送器件地址0XA0,写数据 
-    IIC_Wait_Ack(); 
-  }	 
-   
-  IIC_Send_Byte(ReadAddr%256);   //发送低地址
-	IIC_Wait_Ack();	    
-	IIC_Start();  	 	   
-	IIC_Send_Byte(0XA1);           //进入接收模式			   
-	IIC_Wait_Ack();	 
-  temp=IIC_Read_Byte(0);		   
-  IIC_Stop();//产生一个停止条件	    
-	return temp;
-}
-
-//在AT24CXX指定地址写入一个数据
-//WriteAddr  :写入数据的目的地址    
-//DataToWrite:要写入的数据
-void AT24CXX_WriteOneByte(u16 WriteAddr,u8 DataToWrite)
-{				   	  	    																 
-  IIC_Start();  
-	if(EE_TYPE>AT24C16)
-	{
-		IIC_Send_Byte(0XA0);	    //发送写命令
-		IIC_Wait_Ack();
-		IIC_Send_Byte(WriteAddr>>8);//发送高地址
-    IIC_Wait_Ack();	
- 	}
-  else 
-  {
-    IIC_Send_Byte(0XA0+((WriteAddr/256)<<1));   //发送器件地址0XA0,写数据 
-    IIC_Wait_Ack();	
-  } 
-  IIC_Send_Byte(WriteAddr%256);   //发送低地址
-	IIC_Wait_Ack(); 	 										  		   
-	IIC_Send_Byte(DataToWrite);     //发送字节							   
-	IIC_Wait_Ack();  		    	   
-  IIC_Stop();//产生一个停止条件  
-}
-
-//在AT24CXX里面的指定地址开始写入长度为Len的数据
-//该函数用于写入16bit或者32bit的数据.
-//WriteAddr  :开始写入的地址  
-//DataToWrite:数据数组首地址
-//Len        :要写入数据的长度2,4
-void AT24CXX_WriteLenByte(u16 WriteAddr,u32 DataToWrite,u8 Len)
-{  	
-	u8 t;
-	for(t=0;t<Len;t++)
-	{
-		AT24CXX_WriteOneByte(WriteAddr+t,(DataToWrite>>(8*t))&0xff);
-	}												    
-}
-
-//在AT24CXX里面的指定地址开始读出长度为Len的数据
-//该函数用于读出16bit或者32bit的数据.
-//ReadAddr   :开始读出的地址 
-//返回值     :数据
-//Len        :要读出数据的长度2,4
-u32 AT24CXX_ReadLenByte(u16 ReadAddr,u8 Len)
-{  	
-	u8 t;
-	u32 temp=0;
-	for(t=0;t<Len;t++)
-	{
-		temp<<=8;
-		temp+=AT24CXX_ReadOneByte(ReadAddr+Len-t-1); 	 				   
-	}
-	return temp;												    
-}
-
-//检查AT24CXX是否正常
-//这里用了24XX的最后一个地址(255)来存储标志字.
-//如果用其他24C系列,这个地址要修改
-//返回1:检测失败
-//返回0:检测成功
-u8 AT24CXX_Check(void)
+//读取指定地址的半字(16位数据)
+uint16_t FLASH_ReadHalfWord(uint32_t address)
 {
-	u8 temp;
-	temp=AT24CXX_ReadOneByte(255);//避免每次开机都写AT24CXX			   
-	if(temp==0X55)return 0;		   
-	else//排除第一次初始化的情况
-	{
-		AT24CXX_WriteOneByte(255,0X55);
-	  temp=AT24CXX_ReadOneByte(255);	 
-    DS1307_SetRtc(Set_Rtc_Code);    //设定一次时钟 
-		temp=AT24CXX_ReadOneByte(255);		
-		if(temp==0X55)return 0;     //第一次或者重新设置时间时只要运行else这里面的代码就可以了
-	}
-	return 1;											  
+	return *(__IO uint16_t*)address; 
 }
 
-//在AT24CXX里面的指定地址开始读出指定个数的数据
-//ReadAddr :开始读出的地址 对24c02为0~255
-//pBuffer  :数据数组首地址
-//NumToRead:要读出数据的个数
-void AT24CXX_Read(u16 ReadAddr,u8 *pBuffer,u16 NumToRead)
-{
-	while(NumToRead)
-	{
-		*pBuffer++=AT24CXX_ReadOneByte(ReadAddr++);	
-		NumToRead--;
-	}
-}  
 
-//在AT24CXX里面的指定地址开始写入指定个数的数据
-//WriteAddr :开始写入的地址 对24c02为0~255
-//pBuffer   :数据数组首地址
-//NumToWrite:要写入数据的个数
-void AT24CXX_Write(u16 WriteAddr,u8 *pBuffer,u16 NumToWrite)
+
+//从指定地址开始读取多个数据
+void FLASH_ReadMoreData(uint32_t startAddress,uint16_t *readData,uint16_t countToRead)
 {
-	while(NumToWrite--)
+	uint16_t dataIndex;
+	for(dataIndex=0;dataIndex<countToRead;dataIndex++)
 	{
-		AT24CXX_WriteOneByte(WriteAddr,*pBuffer);
-		WriteAddr++;
-		pBuffer++;
+		readData[dataIndex]=FLASH_ReadHalfWord(startAddress+dataIndex*2);
 	}
 }
- 
 
 
+//读取指定地址的全字(32位数据)
+uint32_t FLASH_ReadWord(uint32_t address)
+{
+	uint32_t temp1,temp2;
+	temp1=*(__IO uint16_t*)address; 
+	temp2=*(__IO uint16_t*)(address+2); 
+	return (temp2<<16)+temp1;
+}
 
 
+//从指定地址开始写入多个数据
+void FLASH_WriteMoreData(uint32_t startAddress,uint16_t *writeData,uint16_t countToWrite)
+{
+	if((startAddress<FLASH_BASE)||((startAddress+countToWrite*2)>=(FLASH_BASE+1024*FLASH_SIZE)))
+	{
+		return;//非法地址
+	}
+	FLASH_Unlock();         //解锁写保护
+	uint32_t offsetAddress=startAddress-FLASH_BASE;               //计算去掉0X08000000后的实际偏移地址
+	uint32_t sectorPosition=offsetAddress/SECTOR_SIZE;            //计算扇区地址，对于STM32F103VET6为0~255
 
+	uint32_t sectorStartAddress=sectorPosition*SECTOR_SIZE+FLASH_BASE;    //对应扇区的首地址
 
+	FLASH_ErasePage(sectorStartAddress);//擦除这个扇区
 
+	uint16_t dataIndex;
+	for(dataIndex=0;dataIndex<countToWrite;dataIndex++)
+	{
+		FLASH_ProgramHalfWord(startAddress+dataIndex*2,writeData[dataIndex]);
+	}
 
+	FLASH_Lock();//上锁写保护
+}
 
+uint8_t getFlashInitStatus  ()
+{
+    uint16_t flag = 0;
+    
+    FLASH_ReadMoreData(FLASH_START - 2, &flag, 1);
+    if (flag == FLASH_VERIFY) {
+        return 0;
+    } else {
+        flag = FLASH_VERIFY;
+        FLASH_WriteMoreData(FLASH_START - 2, &flag, 1);
+        memset((void *)g_orderData, 0, sizeof(g_orderData));
+        FLASH_WriteMoreData(FLASH_START, g_orderData, FLASH_MAX_BYTE >> 1);
+        return 1;
+    }
+}
 
+extern void *memset(void *s, int ch, size_t n);
+void bspflashInit()
+{
+    if (!getFlashInitStatus()) {
+        FLASH_ReadMoreData(FLASH_START, (uint16_t *)g_orderData, FLASH_MAX_BYTE >> 1);
+        return;
+    }
+
+    memset((void *)g_orderData, 0, sizeof(g_orderData));
+    FLASH_WriteMoreData(FLASH_START, g_orderData, FLASH_MAX_BYTE >> 1);
+}
 

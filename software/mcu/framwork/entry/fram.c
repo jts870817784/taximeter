@@ -5,6 +5,7 @@
 #include "math.h"
 #include "mpu6050.h"
 #include "lcd12864.h"
+#include "24cxx.h"
 
 /* 触发任务间隔，单位ms */
 #define UPDATA_MPU_TIME        6
@@ -15,9 +16,6 @@
 
 #define UPDATA_TASK_TIME       2
 #define MENU_TASK_TIME         2
-
-
-#define MAX_ORDER_NUM 128
 
 #define ORDER_BASE_PRICE 800    /* 8块钱起步�?*/
 #define ORDER_TIME_PRICE 30     /* 0.3�?分钟 */
@@ -53,23 +51,11 @@ typedef enum tagRunStatus {
     IDLES
 } runStatus;
 
-typedef struct tagOrderPacket {
-    u16 header;
-    u8 typeLength;
-    u16 orderNumber;
-    _calendar_obj startTime;
-    _calendar_obj endTime;
-    long mile;
-    u16 money;
-    u16 dif;
-    u16 end;
-} orderPacket;
-
 runStatus g_runStatus = IDLES;
 _calendar_obj g_timePoint;
 _calendar_obj g_date;
 
-orderPacket g_orderData[MAX_ORDER_NUM];
+orderPacket g_orderData[ORDER_MAX_DATA_NUM];
 
 char g_strOrder[16];
 char g_strMoney[16];
@@ -226,6 +212,38 @@ void fillOrderPacket(orderPacket *odr)
     odr->dif = calDif((u8 *)odr + 2, sizeof(orderPacket) - 6);
 }
 
+void delOrderPacket()
+{
+    u8 i;
+    orderPacket tmp;
+    g_pageNum--;
+    if (g_pageNow >= 1) {
+        g_pageNow--;
+    }
+    for (i=g_pageNow + 1; i<g_pageNum; i++) {
+        g_orderData[i-1] = g_orderData[i];
+        updataOdrpktToFlash(i-1);
+    }
+}
+
+void updataOdrpktToFlash(u8 index)
+{
+    if (index >= ORDER_MAX_DATA_NUM) {
+        index = 0;
+    }
+
+    flashWrite(index, g_orderData + index);
+}
+
+void updataOdrpktToLoc(u8 index)
+{
+    if (getFlashInitStatus()) {
+        return;
+    }
+
+    flashRead(index, g_orderData + index);
+}
+
 void menuTask()
 {
     if (g_runStatus == IDLES) {
@@ -241,6 +259,8 @@ void menuTask()
         } else if (IS_KEY_TRG(KEY_NEXT)) {
             g_pageNow++;
             dispIdle();
+        ｝else if (IS_KEY_TRG(KEY_STOP)) {
+            delOrderPacket();
         } else {
             dispIdle();
         }
@@ -249,8 +269,9 @@ void menuTask()
             /* stop a order */
             g_runStatus = IDLES;
             DS1307_ReadRtc((u8*)&calendar);
-            fillOrderPacket(g_orderData + g_pageNum++);
-            g_pageNow = g_pageNum - 1;
+            fillOrderPacket(g_orderData + g_pageNum);
+            updataOdrpktToFlash(g_pageNum);
+            g_pageNum++;
             dispIdle();
         } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
             dispIdle();
