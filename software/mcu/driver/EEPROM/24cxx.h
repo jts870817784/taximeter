@@ -1,7 +1,8 @@
-#ifndef _FLASH_H_
-#define _FLASH_H_
+#ifndef _24CXX_H_
+#define _24CXX_H_
 
 #include "config.h"
+#include "ds1307.h"
 
 typedef struct tagOrderPacket {
     u16 header;
@@ -44,10 +45,10 @@ void bspflashInit(void);
 
 
 
-#define flashWrite(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, ptrWriteData, \
-    ORDER_PACKET_SIZE >> 1)
-#define flashRead(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, ptrWriteData, \
-    ORDER_PACKET_SIZE >> 1)
+#define flashWrite(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, \
+    (u16 *)(ptrWriteData), ORDER_PACKET_SIZE >> 1)
+#define flashRead(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, \
+    (u16 *)(ptrWriteData), ORDER_PACKET_SIZE >> 1)
 
 
 #endif

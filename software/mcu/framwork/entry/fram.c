@@ -79,6 +79,10 @@ u8 updataRtcId;
 float averAccel;
 float ax, ay, az;
 
+void updataOdrpktToFlash(u8 index);
+void updataOdrpktToLoc(u8 index);
+
+
 u16 getTimeSub(_calendar_obj *s, _calendar_obj *e)
 {
     return (e->hour - s->hour) * 60 + (e->min - s->min);
@@ -161,11 +165,11 @@ void dispRunning()
     money = GET_MONEY(timeDif, g_mile);
     sprintf(g_strOrder, "#:%05d", g_pageNum + 1);
     sprintf(g_strMoney, " %3.1f$", money);
-    sprintf(g_strMile, "M:%4.1fkm", g_mile);
+    sprintf(g_strMile, "M:%4.1fkm", g_mile / 10.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d", g_timePoint.w_month,
         g_timePoint.w_date, g_timePoint.hour, g_timePoint.min, g_timePoint.sec);
-    sprintf(g_strEnd, "n:%02d-%02d %02d:%02d:%02d", g_date.w_month,
+    sprintf((char *)g_strEnd, "n:%02d-%02d %02d:%02d:%02d", g_date.w_month,
         g_date.w_date, g_date.hour, g_date.min, g_date.sec);
 }
 
@@ -175,8 +179,8 @@ void dispIdle()
     u16 timeDif = getTimeSub(&g_orderData[g_pageNow].startTime, &g_orderData[g_pageNow].endTime);
 
     sprintf(g_strOrder, "#:%05d", g_pageNow);
-    sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money);
-    sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile);
+    sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money / 10.0);
+    sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile / 10.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d",
         g_orderData[g_pageNow].startTime.w_month, g_orderData[g_pageNow].startTime.w_date, g_orderData[g_pageNow].startTime.hour,
@@ -257,7 +261,7 @@ void idleTask() {
     } else if (IS_KEY_TRG(KEY_NEXT)) {
         g_pageNow++;
         dispIdle();
-    ｝else if (IS_KEY_TRG(KEY_STOP)) {
+    } else if (IS_KEY_TRG(KEY_STOP)) {
         delOrderPacket();
     } else {
         dispIdle();

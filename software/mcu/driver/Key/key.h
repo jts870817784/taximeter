@@ -32,7 +32,7 @@ typedef enum
 
 void EXTI_Key_Config(void);
 void keyScan(void);
-
+int IS_KEY_TRG(keyval k);
 #endif
 
 

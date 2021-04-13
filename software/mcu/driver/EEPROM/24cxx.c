@@ -24,9 +24,12 @@
 
 */
 
-#include "flash.h"
 #include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "24cxx.h"
 
+extern orderPacket g_orderData[ORDER_MAX_DATA_NUM];
 
 //读取指定地址的半字(16位数据)
 uint16_t FLASH_ReadHalfWord(uint32_t address)
@@ -91,13 +94,12 @@ uint8_t getFlashInitStatus  ()
     } else {
         flag = FLASH_VERIFY;
         FLASH_WriteMoreData(FLASH_START - 2, &flag, 1);
-        memset((void *)g_orderData, 0, sizeof(g_orderData));
-        FLASH_WriteMoreData(FLASH_START, g_orderData, FLASH_MAX_BYTE >> 1);
+        memset(g_orderData, 0, sizeof(g_orderData));
+        FLASH_WriteMoreData(FLASH_START, (uint16_t *)g_orderData, FLASH_MAX_BYTE >> 1);
         return 1;
     }
 }
 
-extern void *memset(void *s, int ch, size_t n);
 void bspflashInit()
 {
     if (!getFlashInitStatus()) {
@@ -106,6 +108,6 @@ void bspflashInit()
     }
 
     memset((void *)g_orderData, 0, sizeof(g_orderData));
-    FLASH_WriteMoreData(FLASH_START, g_orderData, FLASH_MAX_BYTE >> 1);
+    FLASH_WriteMoreData(FLASH_START, (uint16_t *)g_orderData, FLASH_MAX_BYTE >> 1);
 }
 
