@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "string.h"
 #include "timer_triger.h"
 #include "DS1307.h"
 #include "key.h"
@@ -66,7 +67,7 @@ char g_strEnd[64];
 
 long g_mile = 0;
 s8 g_pageNow = 0;
-u8 g_pageNum = 1;
+u8 g_pageNum = 0;
 
 u8 updataTaskId;
 u8 menuTaskId;
@@ -79,8 +80,8 @@ u8 updataRtcId;
 float averAccel;
 float ax, ay, az;
 
-void updataOdrpktToFlash(u8 index);
-void updataOdrpktToLoc(u8 index);
+void updataOdrpktToFlash(void);
+void updataOdrpktToLoc(void);
 
 
 u16 getTimeSub(_calendar_obj *s, _calendar_obj *e)
@@ -163,8 +164,8 @@ void dispRunning()
 
     timeDif = getTimeSub(&g_timePoint, &g_date);
     money = GET_MONEY(timeDif, g_mile);
-    sprintf(g_strOrder, "#:%05d", g_pageNum + 1);
-    sprintf(g_strMoney, " %3.1f$", money);
+    sprintf(g_strOrder, "#:%05d", g_pageNum);
+    sprintf(g_strMoney, " %3.1f$", money / 10.0);
     sprintf(g_strMile, "M:%4.1fkm", g_mile / 10.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d", g_timePoint.w_month,
@@ -207,7 +208,7 @@ void fillOrderPacket(orderPacket *odr)
     odr->startTime = g_timePoint;
     odr->endTime = calendar;
     odr->mile = g_mile / 1000;
-    odr->orderNumber = ++g_pageNow + 10000;
+    odr->orderNumber = g_pageNum + 10000;
     timeDif = getTimeSub(&odr->startTime, &odr->endTime);
     odr->money = GET_MONEY(timeDif, odr->mile); 
     odr->header = HEADER_CODE;
@@ -220,32 +221,27 @@ void delOrderPacket()
 {
     u8 i;
     orderPacket tmp;
-    g_pageNum--;
-    if (g_pageNow >= 1) {
-        g_pageNow--;
-    }
+
     for (i=g_pageNow + 1; i<g_pageNum; i++) {
         g_orderData[i-1] = g_orderData[i];
-        updataOdrpktToFlash(i-1);
+    }
+    memset((void *)&g_orderData[i-1], 0, sizeof(orderPacket));
+    updataOdrpktToFlash();
+
+    g_pageNum--;
+    if (g_pageNow >= 0) {
+        g_pageNow--;
     }
 }
 
-void updataOdrpktToFlash(u8 index)
+void updataOdrpktToFlash(void)
 {
-    if (index >= ORDER_MAX_DATA_NUM) {
-        index = 0;
-    }
-
-    flashWrite(index, g_orderData + index);
+    flashWrite(g_orderData);
 }
 
-void updataOdrpktToLoc(u8 index)
+void updataOdrpktToLoc(void)
 {
-    if (getFlashInitStatus()) {
-        return;
-    }
-
-    flashRead(index, g_orderData + index);
+    flashRead(g_orderData);
 }
 
 void idleTask() {
@@ -253,13 +249,18 @@ void idleTask() {
         /* start a order */
         g_runStatus = RUNNING;
         g_mile = 0;
+		g_pageNow = g_pageNum;
         DS1307_ReadRtc((u8*)&g_timePoint); /* record time now. */
         dispRunning();
     } else if (IS_KEY_TRG(KEY_PRE)) {
-        g_pageNow--;
+        if (g_pageNow > 0) {
+            g_pageNow--;
+        }
         dispIdle();
     } else if (IS_KEY_TRG(KEY_NEXT)) {
-        g_pageNow++;
+        if (g_pageNow < ORDER_MAX_DATA_NUM - 1 && g_pageNow < g_pageNum - 1) {
+            g_pageNow++;
+        }
         dispIdle();
     } else if (IS_KEY_TRG(KEY_STOP)) {
         delOrderPacket();
@@ -275,11 +276,12 @@ void runingTask()
         g_runStatus = IDLES;
         DS1307_ReadRtc((u8*)&calendar);
         fillOrderPacket(g_orderData + g_pageNum);
-        updataOdrpktToFlash(g_pageNum);
+        updataOdrpktToFlash();
+		g_pageNow = g_pageNum;
         g_pageNum++;
         dispIdle();
     } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
-        dispIdle();
+//        dispIdle();
     } else {
         dispRunning();
     }
@@ -297,7 +299,6 @@ void menuTask()
 
 void fram() 
 {
-    fillOrderPacket(g_orderData + g_pageNum++);
     updataTaskId = registerTriger(TRIGER_DOWN, UPDATA_TASK_TIME);
     menuTaskId = registerTriger(TRIGER_DOWN, MENU_TASK_TIME);
 	updataMpuId = registerTriger(TRIGER_DOWN, UPDATA_MPU_TIME);
@@ -317,4 +318,15 @@ void fram()
     }
 }
 
+void initFramWork()
+{
+    u8 i;
+    for (i=0; i<ORDER_MAX_DATA_NUM; i++) {
+        if (g_orderData[i].header != HEADER_CODE) {
+            break;
+        }
+    }
+    g_pageNum = i;
+    g_pageNow = 0;
+}
 

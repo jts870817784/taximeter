@@ -45,10 +45,8 @@ void bspflashInit(void);
 
 
 
-#define flashWrite(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, \
-    (u16 *)(ptrWriteData), ORDER_PACKET_SIZE >> 1)
-#define flashRead(index, ptrWriteData) FLASH_ReadMoreData(index * ORDER_PACKET_SIZE + FLASH_START, \
-    (u16 *)(ptrWriteData), ORDER_PACKET_SIZE >> 1)
+#define flashWrite(ptrWriteData) FLASH_WriteMoreData(FLASH_START, (u16 *)(ptrWriteData), sizeof(orderPacket) * 20)
+#define flashRead(ptrWriteData) FLASH_ReadMoreData(FLASH_START, (u16 *)(ptrWriteData), sizeof(orderPacket) * 20)
 
 
 #endif

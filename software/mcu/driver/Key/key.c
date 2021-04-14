@@ -189,6 +189,9 @@ int IS_KEY_TRG(keyval k)
         default:
             break;
     }
+    if (res) {
+        delay_ms(100);
+    }
     return res;
 }
 

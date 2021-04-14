@@ -15,6 +15,7 @@
 extern volatile uint16_t time;
 
 extern void fram(void);
+extern void initFramWork(void);
 
 void bspInit()
 {
@@ -32,6 +33,7 @@ void bspInit()
     BASIC_TIM_Init();
 	delay_ms(50);
     bspflashInit();
+    initFramWork();
 }
 
 int main(void)
