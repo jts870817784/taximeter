@@ -31,9 +31,9 @@
 
 
 // 串口2-USART2
-#define  DEBUG_USARTx                   USART2
-#define  DEBUG_USART_CLK                RCC_APB1Periph_USART2
-#define  DEBUG_USART_APBxClkCmd         RCC_APB1PeriphClockCmd
+#define  DEBUG_USARTx                   USART1
+#define  DEBUG_USART_CLK                RCC_APB2Periph_USART1
+#define  DEBUG_USART_APBxClkCmd         RCC_APB2PeriphClockCmd
 #define  DEBUG_USART_BAUDRATE           9600
 
 // USART GPIO 引脚宏定义

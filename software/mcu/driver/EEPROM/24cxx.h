@@ -16,6 +16,10 @@ typedef struct tagOrderPacket {
     u16 end;
 } orderPacket;
 
+#define HEADER_CODE 0X55AA
+#define END_CODE    0XAA55
+
+
 #define ORDER_PACKET_SIZE ((sizeof(orderPacket) & 0x01) == 0 ? sizeof(orderPacket) :\
     (sizeof(orderPacket) + 1))
 #define ORDER_MAX_DATA_NUM 100

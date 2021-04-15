@@ -11,6 +11,7 @@
 #include "lcd12864.h"
 #include "24cxx.h"
 #include "bsp_TiMbase.h" 
+#include "hc12.h"
 
 extern volatile uint16_t time;
 
@@ -23,7 +24,7 @@ void bspInit()
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);  //选择组1
     led_gpio_config();
     EXTI_Key_Config();  //按键中断
-    USART_Config();     //打开USART2串口
+//    USART_Config();     //打开USART2串口
     i2c_GPIO_Config();  //MPU6050的IIC
     MPU6050_Init();     //初始化MPU6050
     IIC_Init();             //Tiny_RTC的IIC初始化 
@@ -33,6 +34,7 @@ void bspInit()
     BASIC_TIM_Init();
 	delay_ms(50);
     bspflashInit();
+    HC12_UART_Config();
     initFramWork();
 }
 

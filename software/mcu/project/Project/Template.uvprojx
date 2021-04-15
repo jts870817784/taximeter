@@ -536,9 +536,9 @@
           <GroupName>Bluetooth</GroupName>
           <Files>
             <File>
-              <FileName>bsp_usart.c</FileName>
+              <FileName>hc12.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\driver\Bluetooth\bsp_usart.c</FilePath>
+              <FilePath>..\..\driver\Bluetooth\hc12.c</FilePath>
             </File>
           </Files>
         </Group>

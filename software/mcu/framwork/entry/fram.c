@@ -7,6 +7,7 @@
 #include "mpu6050.h"
 #include "lcd12864.h"
 #include "24cxx.h"
+#include "hc12.h"
 
 /* 触发任务间隔，单位ms */
 #define UPDATA_MPU_TIME        6
@@ -24,10 +25,6 @@
 
 #define ACCEL_G 9.8
 #define ACCEL_RATIO (4.0 / 4096)
-
-
-#define HEADER_CODE 0X55AA
-#define END_CODE    0XAA55
 
 #define TEXT_GRID 1
 
@@ -130,7 +127,18 @@ void updataRtc()
 
 void updataBlueToothStatus()
 {
-    ;
+    static u8 index = 0;
+    if (HC12RxFlag) {
+        if (index >= g_pageNum) {
+            HC12RxFlag = 0;
+            index = 0;
+        } else {
+            memcpy(HC12TxBuff, (void *)(g_orderData+index), sizeof(orderPacket));
+            HC12TxLength = sizeof(orderPacket);
+            HC12TxPackage();
+            index++;
+        }
+    }
 }
 
 void updataKey()
@@ -179,7 +187,7 @@ void dispIdle()
     /* idle status display */
     u16 timeDif = getTimeSub(&g_orderData[g_pageNow].startTime, &g_orderData[g_pageNow].endTime);
 
-    sprintf(g_strOrder, "#:%05d", g_pageNow);
+    sprintf(g_strOrder, "#:%05d", g_orderData[g_pageNow].orderNumber);
     sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money / 10.0);
     sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile / 10.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
