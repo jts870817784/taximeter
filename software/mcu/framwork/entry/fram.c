@@ -125,6 +125,33 @@ void updataRtc()
     DS1307_ReadRtc((u8*)&g_date);
 }
 
+void fillTxPacket(orderPacket *obj)
+{
+    txPacket *pkt = (txPacket *)HC12TxBuff;
+
+    pkt->header = obj->header;
+    pkt->typeLen = sizeof(txPacket);
+    pkt->orderNum = obj->orderNumber;
+    pkt->s_sec = obj->startTime.sec;
+    pkt->s_min = obj->startTime.min;
+    pkt->s_hour = obj->startTime.hour;
+    pkt->s_day = obj->startTime.w_date;
+    pkt->s_week = obj->startTime.week;
+    pkt->s_month = obj->startTime.w_month;
+    pkt->s_year = obj->startTime.w_year;
+    pkt->e_sec = obj->endTime.sec;
+    pkt->e_min = obj->endTime.min;
+    pkt->e_hour = obj->endTime.hour;
+    pkt->e_day = obj->endTime.w_date;
+    pkt->e_week = obj->endTime.week;
+    pkt->e_month = obj->endTime.w_month;
+    pkt->e_year = obj->endTime.w_year;
+    pkt->mile = obj->mile;
+    pkt->money = obj->money;
+    pkt->dif = obj->dif;
+    pkt->end = obj->end;
+    HC12TxLength = sizeof(txPacket);
+}
 void updataBlueToothStatus()
 {
     static u8 index = 0;
@@ -133,8 +160,7 @@ void updataBlueToothStatus()
             HC12RxFlag = 0;
             index = 0;
         } else {
-            memcpy(HC12TxBuff, (void *)(g_orderData+index), sizeof(orderPacket));
-            HC12TxLength = sizeof(orderPacket);
+            fillTxPacket(g_orderData + index);
             HC12TxPackage();
             index++;
         }

@@ -3,8 +3,9 @@
 
 #include "config.h"
 #include "ds1307.h"
+#include "stdio.h"
 
-typedef struct tagOrderPacket {
+struct tagOrderPacket {
     u16 header;
     u8 typeLength;
     u16 orderNumber;
@@ -14,7 +15,33 @@ typedef struct tagOrderPacket {
     u16 money;
     u16 dif;
     u16 end;
-} orderPacket;
+};
+typedef struct tagOrderPacket orderPacket;
+
+typedef __packed struct tagTxPacket {
+    unsigned short header;
+    unsigned char typeLen;
+    unsigned short orderNum;
+    unsigned char s_sec;
+    unsigned char s_min;
+    unsigned char s_hour;
+    unsigned char s_day;
+    unsigned char s_week;
+    unsigned char s_month;
+    unsigned char s_year;
+    unsigned char e_sec;
+    unsigned char e_min;
+    unsigned char e_hour;
+    unsigned char e_day;
+    unsigned char e_week;
+    unsigned char e_month;
+    unsigned char e_year;
+    long mile;
+    unsigned short money;
+    unsigned short dif;
+    unsigned short end;
+
+} txPacket;
 
 #define HEADER_CODE 0X55AA
 #define END_CODE    0XAA55
