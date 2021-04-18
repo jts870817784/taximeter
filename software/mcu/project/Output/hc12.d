@@ -1,5 +1,5 @@
-..\output\hc12.o: ..\Source\hc12.c
-..\output\hc12.o: ..\Source\hc12.h
+..\output\hc12.o: ..\..\driver\Bluetooth\hc12.c
+..\output\hc12.o: ..\..\driver\Bluetooth\hc12.h
 ..\output\hc12.o: ..\Source\config.h
 ..\output\hc12.o: ..\Library\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
 ..\output\hc12.o: ..\Library\CMSIS\CM3\CoreSupport\core_cm3.h
@@ -30,7 +30,8 @@
 ..\output\hc12.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
 ..\output\hc12.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 ..\output\hc12.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\misc.h
-..\output\hc12.o: ..\Source\PackageDeal.h
-..\output\hc12.o: ..\Source\hc12.h
 ..\output\hc12.o: I:\soft\Keil MDK\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\hc12.o: I:\soft\Keil MDK\ARM\ARMCC\Bin\..\include\math.h
+..\output\hc12.o: ..\..\driver\EEPROM\24cxx.h
+..\output\hc12.o: ..\..\driver\Realtime\ds1307.h
+..\output\hc12.o: ..\..\driver\sys\sys.h

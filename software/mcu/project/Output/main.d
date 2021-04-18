@@ -31,6 +31,7 @@
 ..\output\main.o: ..\..\driver\LED\led.h
 ..\output\main.o: ..\..\driver\sys\sys.h
 ..\output\main.o: ..\..\driver\Key\key.h
+..\output\main.o: ..\Source\config.h
 ..\output\main.o: ..\..\driver\Bluetooth\bsp_usart.h
 ..\output\main.o: I:\soft\Keil MDK\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\main.o: ..\..\driver\MPU6050\mpu6050.h
@@ -39,6 +40,7 @@
 ..\output\main.o: ..\..\driver\delay\delay.h
 ..\output\main.o: ..\..\driver\Realtime\myiic.h
 ..\output\main.o: ..\..\driver\EEPROM\24cxx.h
-..\output\main.o: ..\..\driver\Realtime\DS1307.h
-..\output\main.o: ..\..\driver\LCD12864\lcd12864.H
+..\output\main.o: ..\..\driver\Realtime\ds1307.h
+..\output\main.o: ..\..\driver\LCD12864\lcd12864.h
 ..\output\main.o: ..\..\driver\Timer\bsp_TiMbase.h
+..\output\main.o: ..\..\driver\Bluetooth\hc12.h
