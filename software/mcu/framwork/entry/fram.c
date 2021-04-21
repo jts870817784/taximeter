@@ -11,7 +11,7 @@
 
 /* 触发任务间隔，单位ms */
 #define UPDATA_MPU_TIME        6
-#define UPDATA_LCD_TIME        20
+#define UPDATA_LCD_TIME        50
 #define UPDATA_BLUE_TOOTH_TIME 2
 #define UPDATA_KEY_TTIME       10
 #define UPDATA_RTC_TIME        500
