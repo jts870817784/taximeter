@@ -168,6 +168,6 @@ void LCD_Display_Picture(uint8_t *img)
 void LCD_Clear(void)
 	{
 		Lcd_WriteCmd(0x01);			//清屏指令
-		delay_ms(2);				//延时以待液晶稳定【至少1.6ms】
+		//delay_ms(2);				//延时以待液晶稳定【至少1.6ms】
 	}
 	

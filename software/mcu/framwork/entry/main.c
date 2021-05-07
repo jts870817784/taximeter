@@ -28,8 +28,8 @@ void bspInit()
     i2c_GPIO_Config();  //MPU6050的IIC
     MPU6050_Init();     //初始化MPU6050
     IIC_Init();             //Tiny_RTC的IIC初始化 
-	delay_ms(50);
     lcd_GPIO_init();
+	delay_ms(50);
     Lcd_Init();
     BASIC_TIM_Init();
 	delay_ms(50);
