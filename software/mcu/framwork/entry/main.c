@@ -41,7 +41,8 @@ void bspInit()
     DS1307_ReadRtc((u8*)&g_date);{
     //if (g_date.hour > 19) {
         LCD_Clear();
-        LCD_Display_Words(3, 2, "夜间行驶，请注意安全！");
+        LCD_Display_Words(0, 0, "夜间行驶!");
+		LCD_Display_Words(0, 1, "请注意安全！");
 		delay_ms(2000);
         LCD_Clear();
     }

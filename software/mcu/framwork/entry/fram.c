@@ -202,19 +202,12 @@ void dispRunning()
     money = GET_MONEY(timeDif, g_mile);
     sprintf(g_strOrder, "#:%05d", g_pageNum);
     sprintf(g_strMoney, " %3.1f$", money / 10.0);
-    sprintf(g_strMile, "M:%4.1fkm", g_mile / 10.0);
+    sprintf(g_strMile, "M:%4.1fkm", g_mile / 10000.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d", g_timePoint.w_month,
         g_timePoint.w_date, g_timePoint.hour, g_timePoint.min, g_timePoint.sec);
     sprintf((char *)g_strEnd, "n:%02d-%02d %02d:%02d:%02d", g_date.w_month,
         g_date.w_date, g_date.hour, g_date.min, g_date.sec);
-
-    if (g_time > 1) {
-        LCD_Clear();
-        LCD_Display_Words(3, 0, "鎮ㄤ互杩炵画宸ヤ綔4h锛岃灏藉揩浼戞伅!");
-        delay_ms(2000);
-        LCD_Clear();
-    }
 }
 
 void dispIdle()
@@ -322,6 +315,13 @@ void runingTask()
         updataOdrpktToFlash();
 		g_pageNow = g_pageNum;
         g_pageNum++;
+		if (g_time > 1) {
+			LCD_Clear();
+			LCD_Display_Words(0, 0, "您以连续工作4h!");
+			LCD_Display_Words(0, 1, "请尽快休息!");
+			while(1);
+			LCD_Clear();
+		}
         dispIdle();
     } else if (IS_KEY_TRG(KEY_PRE) || IS_KEY_TRG(KEY_NEXT)) {
 //        dispIdle();
