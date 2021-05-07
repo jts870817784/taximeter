@@ -65,6 +65,7 @@ char g_strEnd[64];
 long g_mile = 0;
 s8 g_pageNow = 0;
 u8 g_pageNum = 0;
+long g_time = 0;
 
 u8 updataTaskId;
 u8 menuTaskId;
@@ -197,6 +198,7 @@ void dispRunning()
     u16 timeDif = 0;
 
     timeDif = getTimeSub(&g_timePoint, &g_date);
+    g_time += timeDif;
     money = GET_MONEY(timeDif, g_mile);
     sprintf(g_strOrder, "#:%05d", g_pageNum);
     sprintf(g_strMoney, " %3.1f$", money / 10.0);
@@ -206,6 +208,13 @@ void dispRunning()
         g_timePoint.w_date, g_timePoint.hour, g_timePoint.min, g_timePoint.sec);
     sprintf((char *)g_strEnd, "n:%02d-%02d %02d:%02d:%02d", g_date.w_month,
         g_date.w_date, g_date.hour, g_date.min, g_date.sec);
+
+    if (g_time > 1) {
+        LCD_Clear();
+        LCD_Display_Words(3, 0, "您以连续工作4h，请尽快休息!");
+        delay_ms(2000);
+        LCD_Clear();
+    }
 }
 
 void dispIdle()

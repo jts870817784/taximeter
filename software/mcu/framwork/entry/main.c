@@ -12,8 +12,10 @@
 #include "24cxx.h"
 #include "bsp_TiMbase.h" 
 #include "hc12.h"
+#include "config.h"
 
 extern volatile uint16_t time;
+extern _calendar_obj g_date;
 
 extern void fram(void);
 extern void initFramWork(void);
@@ -36,6 +38,13 @@ void bspInit()
     bspflashInit();
     HC12_UART_Config();
     initFramWork();
+    DS1307_ReadRtc((u8*)&g_date);{
+    //if (g_date.hour > 19) {
+        LCD_Clear();
+        LCD_Display_Words(3, 2, "夜间行驶，请注意安全！");
+		delay_ms(2000);
+        LCD_Clear();
+    }
 }
 
 int main(void)
