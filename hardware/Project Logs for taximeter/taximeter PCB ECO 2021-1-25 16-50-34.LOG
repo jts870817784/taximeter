@@ -1,0 +1,9 @@
+Removed Pin From Net: NetName=PA7 Pin=SW1-2
+Removed Pin From Net: NetName=PB0 Pin=SW2-2
+Removed Pin From Net: NetName=PB1 Pin=SW3-2
+Removed Pin From Net: NetName=PB2 Pin=SW4-2
+Added Pin To Net: NetName=PB2 Pin=SW1-2
+Added Pin To Net: NetName=PB1 Pin=SW2-2
+Added Pin To Net: NetName=PB0 Pin=SW3-2
+Added Pin To Net: NetName=PA7 Pin=SW4-2
+Added Room: Name=taximeter

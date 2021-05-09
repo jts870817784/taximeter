@@ -1,0 +1,4 @@
+Change Component Designator: OldDesignator=LED1 NewDesignator=D1
+Change Component Designator: OldDesignator=LED2 NewDesignator=D2
+Change Component Designator: OldDesignator=LED3 NewDesignator=D3
+Added Room: Name=taximeter

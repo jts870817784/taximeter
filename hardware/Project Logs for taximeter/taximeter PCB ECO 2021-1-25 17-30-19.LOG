@@ -1,0 +1,5 @@
+Removed Pin From Net: NetName=MPU_AD0 Pin=U1-21
+Removed Pin From Net: NetName=MPU_INT Pin=U1-22
+Added Pin To Net: NetName=MPU_INT Pin=U1-21
+Added Pin To Net: NetName=MPU_AD0 Pin=U1-22
+Added Room: Name=taximeter

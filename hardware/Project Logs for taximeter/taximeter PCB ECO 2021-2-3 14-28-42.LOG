@@ -1,0 +1,67 @@
+Removed Pin From Net: NetName=GND Pin=U1-1
+Removed Pin From Net: NetName=3.3V Pin=U1-8
+Removed Pin From Net: NetName=GND Pin=U1-9
+Removed Pin From Net: NetName=3.3V Pin=U1-23
+Removed Pin From Net: NetName=GND Pin=U1-24
+Removed Pin From Net: NetName=3.3V Pin=U1-35
+Removed Pin From Net: NetName=GND Pin=U1-36
+Removed Pin From Net: NetName=3.3V Pin=U1-47
+Removed Pin From Net: NetName=GND Pin=U1-48
+Change Component Comment : Designator=C5 Old Comment=0.1UF New Comment=104
+Change Component Comment : Designator=C6 Old Comment=0.1UF New Comment=104
+Change Component Comment : Designator=R10 Old Comment=10K New Comment=1K
+Change Component Comment : Designator=E1 Old Comment=10uF/6.3V New Comment=100uF/6.3V
+Change Component Comment : Designator=C1 Old Comment=104 New Comment=22P
+Change Component Comment : Designator=C2 Old Comment=104 New Comment=22P
+Change Component Comment : Designator=D1 Old Comment=红色 New Comment=蓝色
+Change Component Comment : Designator=D2 Old Comment=红色 New Comment=蓝色
+Change Component Comment : Designator=D3 Old Comment=红色 New Comment=蓝色
+Added Pin To Net: NetName=3.3V Pin=U1-1
+Added Pin To Net: NetName=GND Pin=U1-8
+Added Pin To Net: NetName=3.3V Pin=U1-9
+Added Pin To Net: NetName=GND Pin=U1-23
+Added Pin To Net: NetName=3.3V Pin=U1-24
+Added Pin To Net: NetName=GND Pin=U1-35
+Added Pin To Net: NetName=3.3V Pin=U1-36
+Added Pin To Net: NetName=GND Pin=U1-47
+Added Pin To Net: NetName=3.3V Pin=U1-48
+Added Member To Class: ClassName=taximeter Member=Component C1 22P
+Added Member To Class: ClassName=taximeter Member=Component C2 22P
+Added Member To Class: ClassName=taximeter Member=Component C3 104
+Added Member To Class: ClassName=taximeter Member=Component C4 104
+Added Member To Class: ClassName=taximeter Member=Component C5 104
+Added Member To Class: ClassName=taximeter Member=Component C6 104
+Added Member To Class: ClassName=taximeter Member=Component D1 蓝色
+Added Member To Class: ClassName=taximeter Member=Component D2 蓝色
+Added Member To Class: ClassName=taximeter Member=Component D3 蓝色
+Added Member To Class: ClassName=taximeter Member=Component D4 红色
+Added Member To Class: ClassName=taximeter Member=Component E1 100uF/6.3V
+Added Member To Class: ClassName=taximeter Member=Component JP1 HDR-1X4
+Added Member To Class: ClassName=taximeter Member=Component JP2 HDR-1X4
+Added Member To Class: ClassName=taximeter Member=Component JP3 HDR-1X6
+Added Member To Class: ClassName=taximeter Member=Component JP4 HDR-1X4
+Added Member To Class: ClassName=taximeter Member=Component JP5 HDR-1X2
+Added Member To Class: ClassName=taximeter Member=Component JP6 HDR-1X6
+Added Member To Class: ClassName=taximeter Member=Component JP7 HDR-1X8
+Added Member To Class: ClassName=taximeter Member=Component R2 1M
+Added Member To Class: ClassName=taximeter Member=Component R3 1K
+Added Member To Class: ClassName=taximeter Member=Component R4 4.7k
+Added Member To Class: ClassName=taximeter Member=Component R5 4.7k
+Added Member To Class: ClassName=taximeter Member=Component R6 10K
+Added Member To Class: ClassName=taximeter Member=Component R7 1K
+Added Member To Class: ClassName=taximeter Member=Component R8 1K
+Added Member To Class: ClassName=taximeter Member=Component R9 1K
+Added Member To Class: ClassName=taximeter Member=Component R10 1K
+Added Member To Class: ClassName=taximeter Member=Component R11 10K
+Added Member To Class: ClassName=taximeter Member=Component R12 10K
+Added Member To Class: ClassName=taximeter Member=Component RST 3x6x5
+Added Member To Class: ClassName=taximeter Member=Component SW1 3x6x5
+Added Member To Class: ClassName=taximeter Member=Component SW2 3x6x5
+Added Member To Class: ClassName=taximeter Member=Component SW3 3x6x5
+Added Member To Class: ClassName=taximeter Member=Component SW4 3x6x5
+Added Member To Class: ClassName=taximeter Member=Component U1 STM32F103C8T6
+Added Member To Class: ClassName=taximeter Member=Component U2 EEPROM/AT24C256C-SSHL-T
+Added Member To Class: ClassName=taximeter Member=Component U3 AMS1117-3.3
+Added Member To Class: ClassName=taximeter Member=Component USB1 USB-5P
+Added Member To Class: ClassName=taximeter Member=Component X1 8MHz
+Added Room: Name=taximeter

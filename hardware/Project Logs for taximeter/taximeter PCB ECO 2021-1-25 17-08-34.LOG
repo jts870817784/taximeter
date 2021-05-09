@@ -1,0 +1,11 @@
+Removed Pin From Net: NetName=LCD_RS Pin=U1-2
+Removed Pin From Net: NetName=LCD_R/W Pin=U1-3
+Removed Pin From Net: NetName=LCD_E Pin=U1-4
+Added Pin To Net: NetName=PC13 Pin=U1-2
+Added Net: Name=PC13
+Added Pin To Net: NetName=PC14 Pin=U1-3
+Added Net: Name=PC14
+Added Pin To Net: NetName=PC15 Pin=U1-4
+Added Net: Name=PC15
+Added Member To Class: ClassName=taximeter Member=Component SW3 3x6x5
+Added Room: Name=taximeter
