@@ -9,6 +9,8 @@
 #include "24cxx.h"
 #include "hc12.h"
 
+#define DEBUG
+
 /* 瑙﹀彂浠诲姟闂撮殧锛屽崟浣峬s */
 #define UPDATA_MPU_TIME        6
 #define UPDATA_LCD_TIME        100
@@ -315,7 +317,11 @@ void runingTask()
         updataOdrpktToFlash();
 		g_pageNow = g_pageNum;
         g_pageNum++;
+#ifdef DEBUG
+		{
+#else
 		if (g_time > 1) {
+#endif
 			LCD_Clear();
 			LCD_Display_Words(0, 0, "您以连续工作4h!");
 			LCD_Display_Words(0, 1, "请尽快休息!");

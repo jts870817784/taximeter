@@ -14,6 +14,8 @@
 #include "hc12.h"
 #include "config.h"
 
+#define DEBUG
+
 extern volatile uint16_t time;
 extern _calendar_obj g_date;
 
@@ -38,8 +40,12 @@ void bspInit()
     bspflashInit();
     HC12_UART_Config();
     initFramWork();
-    DS1307_ReadRtc((u8*)&g_date);{
-    //if (g_date.hour > 19) {
+    DS1307_ReadRtc((u8*)&g_date);
+#ifdef DEBUG
+	{
+#else
+    if (g_date.hour > 19) {
+#endif
         LCD_Clear();
         LCD_Display_Words(0, 0, "夜间行驶!");
 		LCD_Display_Words(0, 1, "请注意安全！");
