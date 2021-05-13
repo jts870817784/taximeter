@@ -318,9 +318,9 @@ void runingTask()
 		g_pageNow = g_pageNum;
         g_pageNum++;
 #ifdef DEBUG
-		{
-#else
 		if (g_time > 1) {
+#else
+		if (g_time > 4 * 60) {
 #endif
 			LCD_Clear();
 			LCD_Display_Words(0, 0, "您以连续工作4h!");
