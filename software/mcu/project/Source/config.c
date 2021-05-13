@@ -17,10 +17,9 @@
 *******************************************************************************
 */
 #include "config.h"
-#include "delay.h"
 /*微秒延时函数，us-延时时间*/
-/*
-void delay_us(u16 us)
+
+void delay_us(u32 us)
 {
 	u8 i;	
 	while (us--)
@@ -28,10 +27,9 @@ void delay_us(u16 us)
 		for(i=8;i>0;i--);		
 	}
 }
-*/
 
 /*毫秒延时函数，ms-延时时间*/
-/*
+
 void delay_ms(u16 nms)
 { 	
 	while (nms--)
@@ -39,5 +37,4 @@ void delay_ms(u16 nms)
 		delay_us(960);
 	}            
 }
-*/
 

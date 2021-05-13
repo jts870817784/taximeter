@@ -31,3 +31,4 @@
 ..\output\lcd12864.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 ..\output\lcd12864.o: ..\Library\STM32F10x_StdPeriph_Driver\inc\misc.h
 ..\output\lcd12864.o: ..\..\driver\delay\delay.h
+..\output\lcd12864.o: ..\Source\config.h
