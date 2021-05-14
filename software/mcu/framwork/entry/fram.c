@@ -194,6 +194,7 @@ void updataBlueToothStatus()
 #ifdef DEBUG
 			g_date = cld;
 			dispIdle();
+			updataLcd();
 			while(1);
 #endif
             flag = 0;
