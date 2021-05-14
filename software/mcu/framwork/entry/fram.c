@@ -150,7 +150,7 @@ void fillTxPacket(orderPacket *obj)
     pkt->e_month = obj->endTime.w_month;
     pkt->e_year = obj->endTime.w_year;
     pkt->mile = obj->mile;
-    pkt->money = obj->money;
+    pkt->money = (obj->money >> 8 | obj->money << 8) * 10;
     pkt->dif = obj->dif;
     pkt->end = obj->end;
     HC12TxLength = sizeof(txPacket);
