@@ -239,7 +239,7 @@ void dispRunning()
     g_time += timeDif;
     money = GET_MONEY(timeDif, g_mile);
     sprintf(g_strOrder, "#:%05d", g_pageNum);
-    sprintf(g_strMoney, " %3.1f$", money / 10.0);
+    sprintf(g_strMoney, " %3.1f$", money);
     sprintf(g_strMile, "M:%4.1fkm", g_mile / 10000.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d", g_timePoint.w_month,
@@ -254,8 +254,8 @@ void dispIdle()
     u16 timeDif = getTimeSub(&g_orderData[g_pageNow].startTime, &g_orderData[g_pageNow].endTime);
 
     sprintf(g_strOrder, "#:%05d", g_orderData[g_pageNow].orderNumber);
-    sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money / 10.0);
-    sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile / 10.0);
+    sprintf(g_strMoney, " %3.1f$", g_orderData[g_pageNow].money / 100.0);
+    sprintf(g_strMile, "M:%4.1fkm", g_orderData[g_pageNow].mile / 10000.0);
     sprintf(g_strTime, " T:%2dmin", timeDif);
     sprintf(g_strStart, "s:%02d-%02d %02d:%02d:%02d",
         g_orderData[g_pageNow].startTime.w_month, g_orderData[g_pageNow].startTime.w_date, g_orderData[g_pageNow].startTime.hour,
@@ -284,7 +284,7 @@ void fillOrderPacket(orderPacket *odr)
     odr->mile = g_mile / 1000;
     odr->orderNumber = g_pageNum + 10000;
     timeDif = getTimeSub(&odr->startTime, &odr->endTime);
-    odr->money = GET_MONEY(timeDif, odr->mile); 
+    odr->money = GET_MONEY(timeDif, odr->mile) * 100; 
     odr->header = HEADER_CODE;
     odr->end = END_CODE;
     odr->typeLength = sizeof(orderPacket);
