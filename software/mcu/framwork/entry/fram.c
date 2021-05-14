@@ -178,6 +178,8 @@ void getRxPacket(_calendar_obj *cld)
     cld->week = 0;
 }
 
+extern void dispIdle();
+
 void updataBlueToothStatus()
 {
     static u8 index = 0;
@@ -189,6 +191,11 @@ void updataBlueToothStatus()
         if (flag) {
             getRxPacket(&cld);
             DS1307_SetRtc((u8 *)&cld);
+			while(1);
+#ifdef DEBUG
+			g_date = cld;
+			dispIdle();
+#endif
             flag = 0;
         }
     
