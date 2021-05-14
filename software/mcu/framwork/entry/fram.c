@@ -44,7 +44,7 @@
 #define TEXT_END_POS_Y    (TEXT_START_POS_Y + TEXT_GRID)
 
 
-#define GET_MONEY(time, mile) ((((time) * ORDER_TIME_PRICE) + ((mile) / 1000 * ORDER_MILE_PRICE) + ORDER_BASE_PRICE) / 100.0)
+#define GET_MONEY(time, mile) ((((time) * ORDER_TIME_PRICE) + ((mile) / 10000 * ORDER_MILE_PRICE) + ORDER_BASE_PRICE) / 100.0)
 
 typedef __packed struct {
     unsigned char year;
@@ -281,7 +281,7 @@ void fillOrderPacket(orderPacket *odr)
     u16 timeDif = 0;
     odr->startTime = g_timePoint;
     odr->endTime = calendar;
-    odr->mile = g_mile / 1000;
+    odr->mile = g_mile;
     odr->orderNumber = g_pageNum + 10000;
     timeDif = getTimeSub(&odr->startTime, &odr->endTime);
     odr->money = GET_MONEY(timeDif, odr->mile) * 100; 
