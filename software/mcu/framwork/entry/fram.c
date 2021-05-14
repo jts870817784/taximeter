@@ -167,7 +167,7 @@ void fillTxPacket(orderPacket *obj)
 
 void getRxPacket(_calendar_obj *cld)
 {
-    rxCenderPacket *rxPkt = HC12RxBuff + 2;
+    rxCenderPacket *rxPkt = (rxCenderPacket *)(HC12RxBuff + 2);
 
     cld->hour = rxPkt->hour;
     cld->min = rxPkt->min;
@@ -188,7 +188,7 @@ void updataBlueToothStatus()
 
         if (flag) {
             getRxPacket(&cld);
-            DS1307_SetRtc(&cld);
+            DS1307_SetRtc((u8 *)&cld);
             flag = 0;
         }
     
