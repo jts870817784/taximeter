@@ -191,10 +191,10 @@ void updataBlueToothStatus()
         if (flag) {
             getRxPacket(&cld);
             DS1307_SetRtc((u8 *)&cld);
-			while(1);
 #ifdef DEBUG
 			g_date = cld;
 			dispIdle();
+			while(1);
 #endif
             flag = 0;
         }
