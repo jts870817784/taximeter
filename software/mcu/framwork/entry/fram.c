@@ -46,6 +46,15 @@
 
 #define GET_MONEY(time, mile) ((((time) * ORDER_TIME_PRICE) + ((mile) / 1000 * ORDER_MILE_PRICE) + ORDER_BASE_PRICE) / 100.0)
 
+typedef __packed struct {
+    unsigned char year;
+    unsigned char month;
+    unsigned char day;
+    unsigned char hour;
+    unsigned char min;
+    unsigned char sec;
+} rxCenderPacket;
+
 typedef enum tagRunStatus {
     RUNNING = 0,
     IDLES
@@ -155,12 +164,37 @@ void fillTxPacket(orderPacket *obj)
     pkt->end = obj->end;
     HC12TxLength = sizeof(txPacket);
 }
+
+void getRxPacket(_calendar_obj *cld)
+{
+    rxCenderPacket *rxPkt = HC12RxBuff + 2;
+
+    cld->hour = rxPkt->hour;
+    cld->min = rxPkt->min;
+    cld->sec = rxPkt->sec;
+    cld->w_year = rxPkt->year;
+    cld->w_month = rxPkt->month;
+    cld->w_date = rxPkt->day;
+    cld->week = 0;
+}
+
 void updataBlueToothStatus()
 {
     static u8 index = 0;
+    static u8 flag = 1;
+    _calendar_obj cld;
+
     if (HC12RxFlag) {
+
+        if (flag) {
+            getRxPacket(&cld);
+            DS1307_SetRtc(&cld);
+            flag = 0;
+        }
+    
         if (index >= g_pageNum) {
             HC12RxFlag = 0;
+            flag = 1;
             index = 0;
         } else {
             fillTxPacket(g_orderData + index);
