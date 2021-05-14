@@ -165,20 +165,20 @@ void fillTxPacket(orderPacket *obj)
     HC12TxLength = sizeof(txPacket);
 }
 
+#define HEX_TO_DEC_UCHAR(a) (((a) >> 4) * 10 + ((a) & 0x0F))
+
 void getRxPacket(_calendar_obj *cld)
 {
-    rxCenderPacket *rxPkt = (rxCenderPacket *)(HC12RxBuff + 2);
+    rxCenderPacket *rxPkt = HC12RxBuff + 2;
 
-    cld->hour = rxPkt->hour;
-    cld->min = rxPkt->min;
-    cld->sec = rxPkt->sec;
-    cld->w_year = rxPkt->year;
-    cld->w_month = rxPkt->month;
-    cld->w_date = rxPkt->day;
-    cld->week = 0;
+    cld->hour    = HEX_TO_DEC_UCHAR(rxPkt->hour);
+    cld->min     = HEX_TO_DEC_UCHAR(rxPkt->min);
+    cld->sec     = HEX_TO_DEC_UCHAR(rxPkt->sec);
+    cld->w_year  = HEX_TO_DEC_UCHAR(rxPkt->year);
+    cld->w_month = HEX_TO_DEC_UCHAR(rxPkt->month);
+    cld->w_date  = HEX_TO_DEC_UCHAR(rxPkt->day);
+    cld->week    = 0;
 }
-
-extern void dispIdle();
 
 void updataBlueToothStatus()
 {
@@ -190,13 +190,7 @@ void updataBlueToothStatus()
 
         if (flag) {
             getRxPacket(&cld);
-            DS1307_SetRtc((u8 *)&cld);
-#ifdef DEBUG
-			g_date = cld;
-			dispIdle();
-			updataLcd();
-			while(1);
-#endif
+            DS1307_SetRtc(&cld);
             flag = 0;
         }
     
